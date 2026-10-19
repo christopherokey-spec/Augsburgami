@@ -1,0 +1,34 @@
+name: Rebuild Augsburgami
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - games.csv
+      - build_augsburgami.py
+      - augsburgami_template.html
+      - .github/workflows/build.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Generate Augsburgami
+        run: python3 build_augsburgami.py
+
+      - name: Commit updated HTML
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Rebuild Augsburgami from games.csv"
+            git push
+          fi

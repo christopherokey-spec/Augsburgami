@@ -20,6 +20,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Install Python dependencies
+        run: python3 -m pip install beautifulsoup4
+
       - name: Generate Augsburgami
         run: python3 build_augsburgami.py
 
